@@ -34,7 +34,7 @@ config :esbuild,
 
 # Configure tailwind (the version is required)
 config :tailwind,
-  version: "3.4.0",
+  version: "3.4.1",
   hangman_live: [
     args: ~w(
       --config=tailwind.config.js
@@ -43,6 +43,8 @@ config :tailwind,
     ),
     cd: Path.expand("../assets", __DIR__)
   ]
+  
+import_config "config_logger.exs"
 
 # Configures Elixir's Logger
 config :logger, :console,
