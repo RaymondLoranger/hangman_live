@@ -9,7 +9,8 @@ defmodule Hangman.Live.Application do
   def start(_type, _args) do
     children = [
       Hangman.LiveWeb.Telemetry,
-      {DNSCluster, query: Application.get_env(:hangman_live, :dns_cluster_query) || :ignore},
+      {DNSCluster,
+       query: Application.get_env(:hangman_live, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Hangman.Live.PubSub},
       # Start a worker by calling: Hangman.Live.Worker.start_link(arg)
       # {Hangman.Live.Worker, arg},

@@ -4,7 +4,8 @@ import Config
 # you can enable the server option below.
 config :hangman_live, Hangman.LiveWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "cbh2SCWSanTPW52tB3yEwxgPdJuu+uyhgO9jpry3mT9Xhu4NJmK0/pCbTrFvlXns",
+  secret_key_base:
+    "cbh2SCWSanTPW52tB3yEwxgPdJuu+uyhgO9jpry3mT9Xhu4NJmK0/pCbTrFvlXns",
   server: false
 
 # Print only warnings and errors during test
