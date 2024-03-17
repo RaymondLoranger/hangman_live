@@ -114,15 +114,15 @@ ul.examples li a {
   /* @apply md:col-start-2 md:col-span-1 my-auto font-semibold py-2;
 } */
 
-#game-field #grid #message {
+/* #game-field #grid #message { */
   /* comp-4 */
-  @apply bg-blue-500 md:col-start-2 md:col-span-1
+  /* @apply bg-blue-500 md:col-start-2 md:col-span-1
   text-center py-2 font-semibold;
-}
+} */
 
-#game-field #grid #message span {
+/* #game-field #grid #message span {
   @apply text-white tracking-widest animate-pulse font-medium;
-}
+} */
 
 #game-field #grid #drawing {
   /* comp-5 */

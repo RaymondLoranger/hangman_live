@@ -40,21 +40,23 @@ defmodule Hangman.LiveWeb.HangmanComponents do
 
   def word_letter(%{letter: letter} = assigns) do
     assigns =
-      assign_new(assigns, :kind, fn ->
+      assign(
+        assigns,
+        :kind,
         case letter do
-          "_" -> "masked"
-          <<byte>> when byte in ?a..?z -> "guessed"
-          _single_letter_list -> "unveiled"
+          "_" -> "hide"
+          <<byte>> when byte in ?a..?z -> "show"
+          _single_letter_list -> "unveil"
         end
-      end)
+      )
 
     ~H"""
     <span
       id={@id}
-      masked={@kind == "masked"}
-      guessed={@kind == "guessed"}
-      unveiled={@kind == "unveiled"}
-      class="guessed:text-blue-500 masked:text-gray-900 unveiled:opacity-30"
+      hide={@kind == "hide"}
+      show={@kind == "show"}
+      unveil={@kind == "unveil"}
+      class="hide:text-gray-900 show:text-blue-500 unveil:opacity-30"
     >
       <%= @letter %>
     </span>
@@ -101,19 +103,22 @@ defmodule Hangman.LiveWeb.HangmanComponents do
     """
   end
 
+  def message(assigns) do
+    ~H"""
+    <p
+      id="message"
+      class="bg-blue-500 py-2 text-center font-semibold md:col-span-1 md:col-start-2"
+    >
+      <%= @info %>
+    </p>
+    """
+  end
+
   def new_game_button(assigns) do
     ~H"""
     <div id="new-game">
       <button phx-click="new-game">New Game</button>
     </div>
-    """
-  end
-
-  def message(assigns) do
-    ~H"""
-    <p id="message">
-      <%= message(@game_state, @guess) %>
-    </p>
     """
   end
 
@@ -125,26 +130,33 @@ defmodule Hangman.LiveWeb.HangmanComponents do
 
   ## Private functions
 
+  # defp span(assigns) do
+  #   ~H"""
+  #   <span class="text-white tracking-widest animate-pulse font-medium">
+  #     <%= @guess %>
+  #   </span>|
+  #   """
+  # end
+
   # initializing, good guess, bad guess, already used, lost, won...
-  @spec message(Game.state(), Game.letter() | nil) :: String.t() | HTML.safe()
-  defp message(:initializing, _guess), do: "Good luck 😊❗"
-  defp message(:good_guess, _guess), do: "Good guess 😊❗"
+  # @spec message(Game.state(), Game.letter() | nil) :: String.t() | HTML.safe()
+  # defp message(:initializing, _guess), do: "Good luck 😊❗"
+  # defp message(:good_guess, _guess), do: "Good guess 😊❗"
 
-  defp message(:bad_guess, guess),
-    do: HTML.raw("Letter <span>#{guess}</span> not in the word 😟❗")
+  # defp message(:bad_guess, guess),
+  #   do: HTML.raw("Letter <span>#{guess}</span> not in the word 😟❗")
 
-  defp message(:already_used, guess),
-    do: HTML.raw("Letter <span>#{guess}</span> already used 😮❗")
+  # defp info(assigns) do
+  #   ~H"""
+  #   Letter <.span(assigns)> not in the word 😟❗
+  #   """
+  # end
 
-  defp message(:lost, _guess), do: HTML.raw("Sorry, <span>you lost</span> 😂❗")
-  defp message(:won, _guess), do: HTML.raw("Bravo, <span>you won</span> 😇❗")
+  # defp message(:already_used, guess),
+  #   do: HTML.raw("Letter <span>#{guess}</span> already used 😮❗")
 
-  # @spec guess_letter(boolean, boolean) :: String.t() | nil
-  # defp guess_letter(correct, game_over)
-  # defp guess_letter(false, false), do: nil
-  # defp guess_letter(false, true), do: "game-over"
-  # defp guess_letter(true, false), do: "correct"
-  # defp guess_letter(true, true), do: "correct game-over"
+  # defp message(:lost, _guess), do: HTML.raw("Sorry, <span>you lost</span> 😂❗")
+  # defp message(:won, _guess), do: HTML.raw("Bravo, <span>you won</span> 😇❗")
 
   # rope, head, body, leg2, leg1, arm2, arm1
   @spec dim_if(boolean) :: String.t()

@@ -74,9 +74,9 @@ module.exports = {
         '.phx-change-loading &'
       ])
     ),
-    plugin(({ addVariant }) => addVariant('masked', '&[masked]')),
-    plugin(({ addVariant }) => addVariant('guessed', '&[guessed]')),
-    plugin(({ addVariant }) => addVariant('unveiled', '&[unveiled]')),
+    plugin(({ addVariant }) => addVariant('hide', '&[hide]')),
+    plugin(({ addVariant }) => addVariant('show', '&[show]')),
+    plugin(({ addVariant }) => addVariant('unveil', '&[unveil]')),
     plugin(({ addVariant }) => addVariant('good-guess', '&[good-guess]')),
     plugin(({ addVariant }) => addVariant('game-over', '&[game-over]')),
     plugin(({ addVariant }) => addVariant('last_turn', '&[last_turn]')),

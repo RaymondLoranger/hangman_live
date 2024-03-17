@@ -15,7 +15,9 @@ defmodule Hangman.LiveWeb.HangmanLive do
 
   @impl LV
   @spec render(Socket.assigns()) :: Rendered.t()
-  def render(assigns) do
+  def render(%{game_state: game_state, guess: guess} = assigns) do
+    assigns = assign(assigns, :info, info(game_state, guess))
+
     ~H"""
     <.game_field header="Welcome to Hangman!!">
       <.grid keyup="keyup">
@@ -37,7 +39,7 @@ defmodule Hangman.LiveWeb.HangmanLive do
           />
         </.guess_letters>
         <.turns_left turns_left={@turns_left} />
-        <.message game_state={@game_state} guess={@guess} />
+        <.message info={@info} />
         <.drawing turns_left={@turns_left} />
         <.new_game_button />
       </.grid>
@@ -66,4 +68,29 @@ defmodule Hangman.LiveWeb.HangmanLive do
   @spec terminate(term, Socket.t()) :: :ok
   def terminate(reason, socket),
     do: :ok = Live.terminate(reason, socket)
+
+  ## Private functions
+
+  # initializing, good guess, bad guess, already used, lost, won...
+  @spec info(Game.state(), Game.letter() | nil) :: String.t() | HTML.safe()
+  defp info(:initializing, _guess), do: "Good luck 😊❗"
+  defp info(:good_guess, _guess), do: "Good guess 😊❗"
+
+  defp info(:bad_guess, guess),
+    do: HTML.raw("Letter #{span(guess)} not in the word 😟❗")
+
+  defp info(:already_used, guess),
+    do: HTML.raw("Letter #{span(guess)} already used 😮❗")
+
+  defp info(:lost, _guess), do: HTML.raw("Sorry, #{span("you lost")} 😂❗")
+  defp info(:won, _guess), do: HTML.raw("Bravo, #{span("you won")} 😇❗")
+
+  @spec span(String.t()) :: String.t()
+  defp span(text) do
+    """
+    <span class="ml-1 animate-pulse text-xl font-medium tracking-widest text-white">
+      #{text}
+    </span>
+    """
+  end
 end
