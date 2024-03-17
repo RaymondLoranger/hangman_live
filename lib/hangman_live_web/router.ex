@@ -18,6 +18,7 @@ defmodule Hangman.LiveWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    live "/hangman", HangmanLive
   end
 
   # Other scopes may use custom stacks.

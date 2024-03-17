@@ -4,7 +4,7 @@ defmodule Hangman.Live.MixProject do
   def project do
     [
       app: :hangman_live,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -55,7 +55,9 @@ defmodule Hangman.Live.MixProject do
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       {:log_reset, "~> 0.1"},
       {:phx_formatter, "~> 0.1", only: :dev, runtime: false},
-      {:tailwind_formatter, "~> 0.4", only: [:dev, :test], runtime: false}
+      {:tailwind_formatter, "~> 0.4", only: [:dev, :test], runtime: false},
+      {:hangman_engine, "~> 0.1"},
+      {:hangman_game, "~> 0.1"}
     ]
   end
 

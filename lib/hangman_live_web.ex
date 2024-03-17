@@ -102,9 +102,27 @@ defmodule Hangman.LiveWeb do
     end
   end
 
+  def aliases do
+    quote do
+      alias Hangman.{Engine, Game, Live}
+      alias Phoenix.HTML
+      alias Hangman.LiveWeb.HangmanComponents
+      alias Phoenix.LiveView, as: LV
+      alias Phoenix.LiveView.{Rendered, Socket}
+    end
+  end
+
   @doc """
   When used, dispatch to the appropriate controller/view/etc.
   """
+  defmacro __using__(whiches) when is_list(whiches) do
+    for which <- whiches do
+      quote do
+        unquote(apply(__MODULE__, which, []))
+      end
+    end
+  end
+
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
   end

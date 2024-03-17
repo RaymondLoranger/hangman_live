@@ -484,6 +484,11 @@ defmodule Hangman.LiveWeb.CoreComponents do
   slot :inner_block, required: true
   slot :subtitle
   slot :actions
+  # Customized...
+  attr :inner_class, :string,
+    default: "text-lg font-semibold leading-8 text-zinc-800"
+
+  attr :subtitle_class, :string, default: "mt-2 text-sm leading-6 text-zinc-600"
 
   def header(assigns) do
     ~H"""
@@ -492,10 +497,10 @@ defmodule Hangman.LiveWeb.CoreComponents do
       @class
     ]}>
       <div>
-        <h1 class="text-lg font-semibold leading-8 text-zinc-800">
+        <h1 class={@inner_class}>
           <%= render_slot(@inner_block) %>
         </h1>
-        <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-zinc-600">
+        <p :if={@subtitle != []} class={@subtitle_class}>
           <%= render_slot(@subtitle) %>
         </p>
       </div>
