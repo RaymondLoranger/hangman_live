@@ -1,6 +1,9 @@
 defmodule Hangman.LiveWeb.HangmanComponents do
   use Hangman.LiveWeb, [:html, :aliases]
 
+  attr :header, :string, required: true
+  slot :inner_block, required: true
+
   @spec game_field(Socket.assigns()) :: Rendered.t()
   def game_field(assigns) do
     ~H"""
@@ -8,41 +11,50 @@ defmodule Hangman.LiveWeb.HangmanComponents do
       <%= @header %>
     </.header>
 
-    <div id="game-field" class="mx-auto max-w-3xl text-center">
+    <div id="game-field" class="text-center">
       <%= render_slot(@inner_block) %>
     </div>
     """
   end
+
+  attr :keyup, :string, required: true
+  slot :inner_block, required: true
 
   def grid(assigns) do
     ~H"""
     <div
       id="grid"
       phx-window-keyup={@keyup}
-      class="mb-4 grid grid-flow-row-dense grid-cols-1 gap-x-8 gap-y-5 md:grid-cols-2 md:gap-y-2"
+      class="mb-4 grid grid-flow-row-dense grid-cols-1 gap-x-14 gap-y-5 md:grid-cols-2 md:gap-y-3"
     >
       <%= render_slot(@inner_block) %>
     </div>
     """
   end
 
+  attr :update, :string, required: true
+  slot :inner_block, required: true
+
   def word_letters(assigns) do
     ~H"""
     <p
       id="word-letters"
       phx-update={@update}
-      class="font-mono mb-4 h-10 text-3xl tracking-wide md:col-span-1 md:col-start-2"
+      class="font-mono mb-4 h-auto text-3xl tracking-wide md:col-span-1 md:col-start-2"
     >
       <%= render_slot(@inner_block) %>
     </p>
     """
   end
 
+  attr :id, :string, required: true
+  attr :letter, :string, required: true, doc: "can be a single letter list too"
+
   def word_letter(%{letter: letter} = assigns) do
     assigns =
       assign(
         assigns,
-        :kind,
+        :variant,
         case letter do
           "_" -> "hide"
           <<byte>> when byte in ?a..?z -> "show"
@@ -53,15 +65,18 @@ defmodule Hangman.LiveWeb.HangmanComponents do
     ~H"""
     <span
       id={@id}
-      hide={@kind == "hide"}
-      show={@kind == "show"}
-      unveil={@kind == "unveil"}
+      hide={@variant == "hide"}
+      show={@variant == "show"}
+      unveil={@variant == "unveil"}
       class="hide:text-gray-900 show:text-blue-500 unveil:opacity-30"
     >
       <%= @letter %>
     </span>
     """
   end
+
+  attr :update, :string, required: true
+  slot :inner_block, required: true
 
   def guess_letters(assigns) do
     ~H"""
@@ -75,11 +90,18 @@ defmodule Hangman.LiveWeb.HangmanComponents do
     """
   end
 
+  attr :id, :string, required: true
+  attr :click, :string, required: true
+  attr :letter, :string, required: true
+  attr :disabled, :boolean, required: true
+  attr :good_guess, :boolean, required: true
+  attr :game_over, :boolean, required: true
+
   def guess_letter(assigns) do
     ~H"""
     <button
       id={@id}
-      phx-click="click"
+      phx-click={@click}
       phx-value-guess={@letter}
       disabled={@disabled}
       good-guess={@good_guess}
@@ -90,6 +112,8 @@ defmodule Hangman.LiveWeb.HangmanComponents do
     </button>
     """
   end
+
+  attr :turns_left, :integer, required: true
 
   def turns_left(assigns) do
     ~H"""
@@ -103,63 +127,68 @@ defmodule Hangman.LiveWeb.HangmanComponents do
     """
   end
 
+  attr :game_state, :atom, required: true
+  attr :guess, :string, required: true
+
   def message(assigns) do
     ~H"""
     <p
       id="message"
-      class="bg-blue-500 py-2 text-center font-semibold md:col-span-1 md:col-start-2"
+      class="bg-blue-500 py-2 text-center font-semibold text-white md:col-span-1 md:col-start-2"
     >
-      <%= @info %>
+      <%= message(@game_state, @guess) |> HTML.raw() %>
     </p>
-    """
-  end
-
-  def new_game_button(assigns) do
-    ~H"""
-    <div id="new-game">
-      <button phx-click="new-game">New Game</button>
-    </div>
     """
   end
 
   embed_templates "hangman/drawing.html"
 
-  # attr :turns_left, :integer, required: true
-  # attr :class, :string, required: true
+  attr :turns_left, :integer, required: true
+
   def drawing(assigns)
+
+  attr :click, :string, required: true
+
+  def new_game_button(assigns) do
+    ~H"""
+    <div id="new-game" class="md:col-span-1 md:col-start-1">
+      <button
+        phx-click={@click}
+        class="w-5/12 rounded bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+      >
+        New Game
+      </button>
+    </div>
+    """
+  end
 
   ## Private functions
 
-  # defp span(assigns) do
-  #   ~H"""
-  #   <span class="text-white tracking-widest animate-pulse font-medium">
-  #     <%= @guess %>
-  #   </span>|
-  #   """
-  # end
-
   # initializing, good guess, bad guess, already used, lost, won...
-  # @spec message(Game.state(), Game.letter() | nil) :: String.t() | HTML.safe()
-  # defp message(:initializing, _guess), do: "Good luck 😊❗"
-  # defp message(:good_guess, _guess), do: "Good guess 😊❗"
+  @spec message(Game.state(), Game.letter() | nil) :: String.t()
+  defp message(:initializing, _guess), do: "Good luck 😊❗"
+  defp message(:good_guess, _guess), do: "Good guess 😊❗"
 
-  # defp message(:bad_guess, guess),
-  #   do: HTML.raw("Letter <span>#{guess}</span> not in the word 😟❗")
+  defp message(:bad_guess, guess),
+    do: "Letter #{span(guess)} not in the word 😟❗"
 
-  # defp info(assigns) do
-  #   ~H"""
-  #   Letter <.span(assigns)> not in the word 😟❗
-  #   """
-  # end
+  defp message(:already_used, guess),
+    do: "Letter #{span(guess)} already used 😮❗"
 
-  # defp message(:already_used, guess),
-  #   do: HTML.raw("Letter <span>#{guess}</span> already used 😮❗")
+  defp message(:lost, _guess), do: "Sorry, #{span("you lost")} 😂❗"
+  defp message(:won, _guess), do: "Bravo, #{span("you won")} 😇❗"
 
-  # defp message(:lost, _guess), do: HTML.raw("Sorry, <span>you lost</span> 😂❗")
-  # defp message(:won, _guess), do: HTML.raw("Bravo, <span>you won</span> 😇❗")
+  @spec span(String.t()) :: String.t()
+  defp span(text) do
+    """
+    <span class="ml-1.5 mr-2.5 rounded -pt-0.5 pb-1 font-medium tracking-widest bg-red-600 pl-2">
+      #{text}
+    </span>
+    """
+  end
 
   # rope, head, body, leg2, leg1, arm2, arm1
   @spec dim_if(boolean) :: String.t()
   defp dim_if(_dim? = true), do: "opacity-20"
-  defp dim_if(_dim?), do: "opacity-100"
+  defp dim_if(_dim?), do: "opacity-100 transition-opacity duration-500"
 end
