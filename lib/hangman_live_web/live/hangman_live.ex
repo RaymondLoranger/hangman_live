@@ -7,9 +7,9 @@ defmodule Hangman.LiveWeb.HangmanLive do
   @spec mount(LV.unsigned_params(), map, Socket.t()) :: {:ok, Socket.t()}
   def mount(_params, _session, socket) do
     if connected?(socket) do
-      {:ok, Live.new_game(socket)}
+      {:ok, Live.new_game(socket) |> stream_guess_letters()}
     else
-      {:ok, Live.init_game(socket)}
+      {:ok, Live.init_game(socket) |> stream_guess_letters()}
     end
   end
 
@@ -26,14 +26,14 @@ defmodule Hangman.LiveWeb.HangmanLive do
             letter={letter}
           />
         </.word_letters>
-        <.guess_letters update="replace">
+        <.guess_letters update="stream">
           <.guess_letter
-            :for={byte <- ?a..?z}
-            id={<<byte>>}
+            :for={{id, letter} <- @streams.guess_letters}
+            id={id}
             click="click"
-            letter={<<byte>>}
-            disabled={<<byte>> in @guesses}
-            good_guess={<<byte>> in @letters}
+            letter={letter}
+            disabled={letter in @guesses}
+            good_guess={letter in @letters}
             game_over={@game_state in [:lost, :won]}
           />
         </.guess_letters>
@@ -55,11 +55,11 @@ defmodule Hangman.LiveWeb.HangmanLive do
   end
 
   def handle_event("click", %{"guess" => guess}, socket),
-    do: {:noreply, Live.make_move(socket, guess)}
+    do: {:noreply, make_move(socket, guess)}
 
   def handle_event("keyup", %{"key" => <<byte>> = key}, socket)
       when byte in ?a..?z,
-      do: {:noreply, Live.make_move(socket, key)}
+      do: {:noreply, make_move(socket, key)}
 
   def handle_event("keyup", %{"key" => key}, socket) do
     IO.inspect(key, label: "::: key ignored ::")
@@ -69,4 +69,17 @@ defmodule Hangman.LiveWeb.HangmanLive do
   @impl LV
   @spec terminate(term, Socket.t()) :: :ok
   def terminate(reason, socket), do: :ok = Live.terminate(reason, socket)
+
+  ## Private functions
+
+  @spec make_move(Socket.t(), <<_::8>>) :: Socket.t()
+  defp make_move(socket, guess),
+    do: Live.make_move(socket, guess) |> stream_insert(:guess_letters, guess)
+
+  @spec stream_guess_letters(Socket.t()) :: Socket.t()
+  def stream_guess_letters(socket) do
+    socket
+    |> stream_configure(:guess_letters, dom_id: & &1)
+    |> stream(:guess_letters, Enum.map(?a..?z, &<<&1>>))
+  end
 end
