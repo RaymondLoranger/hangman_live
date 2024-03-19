@@ -3,12 +3,6 @@ defmodule Hangman.Live do
 
   require Logger
 
-  @init_tally Game.new("", "") |> Game.tally()
-
-  @spec init_game(Socket.t()) :: Socket.t()
-  def init_game(socket),
-    do: assign(socket, @init_tally) |> assign(guess: nil)
-
   @spec end_game(Socket.t()) :: :ok
   def end_game(%Socket{assigns: %{game_name: game_name}} = _socket) do
     :ok = Logger.info("Ending game #{game_name}...")

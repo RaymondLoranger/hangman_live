@@ -78,7 +78,7 @@ module.exports = {
     plugin(({ addVariant }) => addVariant('show', '&[show]')),
     plugin(({ addVariant }) => addVariant('unveil', '&[unveil]')),
     plugin(({ addVariant }) => addVariant('good-guess', '&[good-guess]')),
-    plugin(({ addVariant }) => addVariant('game-over', '&[game-over]')),
+    plugin(({ addVariant }) => addVariant('bad-guess', '&[bad-guess]')),
     plugin(({ addVariant }) => addVariant('last_turn', '&[last_turn]')),
 
     // Embeds Heroicons (https://heroicons.com) into your app.css bundle

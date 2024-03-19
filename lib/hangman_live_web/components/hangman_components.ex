@@ -83,7 +83,11 @@ defmodule Hangman.LiveWeb.HangmanComponents do
     <div
       id="guess-letters"
       phx-update={@update}
-      class="grid-cols-auto-fit grid items-center justify-items-center gap-x-1 gap-y-3 md:col-span-1 md:col-start-2 md:gap-x-2 md:gap-y-4"
+      class={[
+        "grid-cols-auto-fit grid items-center justify-items-center",
+        "gap-x-1 gap-y-3",
+        "md:col-span-1 md:col-start-2 md:gap-x-2 md:gap-y-4"
+      ]}
     >
       <%= render_slot(@inner_block) %>
     </div>
@@ -95,7 +99,7 @@ defmodule Hangman.LiveWeb.HangmanComponents do
   attr :letter, :string, required: true
   attr :disabled, :boolean, required: true
   attr :good_guess, :boolean, required: true
-  attr :game_over, :boolean, required: true
+  attr :bad_guess, :boolean, required: true
 
   def guess_letter(assigns) do
     ~H"""
@@ -105,8 +109,18 @@ defmodule Hangman.LiveWeb.HangmanComponents do
       phx-value-guess={@letter}
       disabled={@disabled}
       good-guess={@good_guess}
-      game-over={@game_over}
-      class="h-10 w-10 rounded-full border-2 border-indigo-700 bg-transparent pb-1 font-semibold game-over:cursor-not-allowed good-guess:border-blue-500 hover:border-transparent hover:bg-indigo-500 hover:text-white hover:good-guess:animate-bounce disabled:cursor-not-allowed disabled:bg-indigo-700 disabled:text-white disabled:good-guess:bg-blue-500"
+      bad-guess={@bad_guess}
+      class={[
+        "h-10 w-10 rounded-full pb-1 font-semibold",
+        "border-2 border-indigo-700 bg-transparent",
+        "bad-guess:bg-indigo-700 bad-guess:text-white",
+        "hover:border-transparent hover:bg-indigo-500 hover:text-white",
+        "hover:good-guess:animate-bounce",
+        "good-guess:border-blue-500 good-guess:bg-blue-500",
+        "focus:border-transparent focus:outline-none",
+        "focus:ring-2 focus:ring-yellow-200",
+        "active:ring-4 disabled:cursor-not-allowed"
+      ]}
     >
       <%= @letter %>
     </button>
@@ -154,7 +168,12 @@ defmodule Hangman.LiveWeb.HangmanComponents do
     <div id="new-game" class="md:col-span-1 md:col-start-1">
       <button
         phx-click={@click}
-        class="w-5/12 rounded bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+        class={[
+          "w-5/12 rounded bg-blue-500 px-4 py-2 font-semibold text-white",
+          "hover:bg-blue-700",
+          "focus:outline-none focus:ring-2 focus:ring-yellow-200",
+          "active:ring-4"
+        ]}
       >
         New Game
       </button>
