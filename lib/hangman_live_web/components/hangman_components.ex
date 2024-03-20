@@ -7,7 +7,7 @@ defmodule Hangman.LiveWeb.HangmanComponents do
   @spec game_field(Socket.assigns()) :: Rendered.t()
   def game_field(assigns) do
     ~H"""
-    <.header inner_class="mb-6 md:mb-12 md:ml-24 text-center text-cool-gray-900 font-extrabold text-4xl">
+    <.header inner_class="mb-6 md:mb-12 md:ml-20 text-center text-cool-gray-900 font-extrabold text-4xl">
       <%= @header %>
     </.header>
 
