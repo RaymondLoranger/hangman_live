@@ -31,7 +31,7 @@ defmodule Hangman.LiveWeb.HangmanLive do
           </.word_letters>
           <.guess_letters
             update="stream"
-            disabled={@game_state in [:lost, :win]}
+            disabled={@game_state in [:lost, :won]}
           >
             <.guess_letter
               :for={{id, letter} <- @streams.guess_letters}
