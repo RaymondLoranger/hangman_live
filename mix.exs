@@ -4,7 +4,7 @@ defmodule Hangman.Live.MixProject do
   def project do
     [
       app: :hangman_live,
-      version: "0.1.6",
+      version: "0.1.7",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -29,7 +29,7 @@ defmodule Hangman.Live.MixProject do
 
   defp package do
     [
-      files: ["lib", "mix.exs", "README*"],
+      files: ["lib", "assets", "mix.exs", "README*"],
       maintainers: ["Raymond Loranger"],
       licenses: ["MIT"],
       links: %{"GitHub" => source_url()}
@@ -62,7 +62,6 @@ defmodule Hangman.Live.MixProject do
       {:floki, ">= 0.30.0", only: :test},
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
-      {:heroicons, "~> 0.5.5"},
       # {:heroicons,
       #  github: "tailwindlabs/heroicons",
       #  tag: "v2.1.1",
@@ -77,6 +76,7 @@ defmodule Hangman.Live.MixProject do
       {:bandit, "~> 1.2"},
       # Added dependencies...
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.22", only: :dev, runtime: false},
       {:log_reset, "~> 0.1"},
       {:phx_formatter, "~> 0.1", only: :dev, runtime: false},
       {:tailwind_formatter, "~> 0.4", only: [:dev, :test], runtime: false},
