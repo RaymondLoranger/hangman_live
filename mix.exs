@@ -4,7 +4,7 @@ defmodule Hangman.Live.MixProject do
   def project do
     [
       app: :hangman_live,
-      version: "0.1.7",
+      version: "0.1.8",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -29,7 +29,7 @@ defmodule Hangman.Live.MixProject do
 
   defp package do
     [
-      files: ["lib", "assets", "mix.exs", "README*"],
+      files: ["lib", "mix.exs", "README*"],
       maintainers: ["Raymond Loranger"],
       licenses: ["MIT"],
       links: %{"GitHub" => source_url()}
