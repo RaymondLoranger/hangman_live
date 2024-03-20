@@ -51,24 +51,22 @@ defmodule Hangman.LiveWeb.HangmanComponents do
   attr :letter, :string, required: true, doc: "can be a single letter list too"
 
   def word_letter(%{letter: letter} = assigns) do
-    assigns =
-      assign(
-        assigns,
-        :variant,
-        case letter do
-          "_" -> "hide"
-          <<byte>> when byte in ?a..?z -> "show"
-          _single_letter_list -> "unveil"
-        end
-      )
+    variant =
+      case letter do
+        "_" -> "concealed"
+        <<byte>> when byte in ?a..?z -> "revealed"
+        _single_letter_list -> "unveiled"
+      end
+
+    assigns = assign(assigns, variant: variant)
 
     ~H"""
     <span
       id={@id}
-      hide={@variant == "hide"}
-      show={@variant == "show"}
-      unveil={@variant == "unveil"}
-      class="hide:text-gray-900 show:text-blue-500 unveil:opacity-30"
+      concealed={@variant == "concealed"}
+      revealed={@variant == "revealed"}
+      unveiled={@variant == "unveiled"}
+      class="concealed:text-gray-900 revealed:text-blue-500 unveiled:opacity-30"
     >
       <%= @letter %>
     </span>
@@ -76,21 +74,25 @@ defmodule Hangman.LiveWeb.HangmanComponents do
   end
 
   attr :update, :string, required: true
+  attr :disabled, :boolean, required: true
   slot :inner_block, required: true
 
   def guess_letters(assigns) do
     ~H"""
-    <div
+    <%!-- The disabled attribute is not supported by <div>. --%>
+    <fieldset
       id="guess-letters"
       phx-update={@update}
+      disabled={@disabled}
       class={[
+        "group",
         "grid-cols-auto-fit grid items-center justify-items-center",
         "gap-x-1 gap-y-3",
         "md:col-span-1 md:col-start-2 md:gap-x-2 md:gap-y-4"
       ]}
     >
       <%= render_slot(@inner_block) %>
-    </div>
+    </fieldset>
     """
   end
 
@@ -119,7 +121,8 @@ defmodule Hangman.LiveWeb.HangmanComponents do
         "good-guess:border-blue-500 good-guess:bg-blue-500",
         "focus:border-transparent focus:outline-none",
         "focus:ring-2 focus:ring-yellow-200",
-        "active:ring-4 disabled:cursor-not-allowed"
+        "active:ring-4 disabled:cursor-not-allowed",
+        "group-disabled:cursor-not-allowed"
       ]}
     >
       <%= @letter %>
@@ -134,7 +137,7 @@ defmodule Hangman.LiveWeb.HangmanComponents do
     <p
       id="turns-left"
       last_turn={@turns_left == 1}
-      class="my-auto py-2 font-semibold last_turn:bg-red-500 last_turn:text-white md:col-span-1 md:col-start-2"
+      class="my-auto rounded bg-green-500 py-2 font-semibold shadow last_turn:bg-red-500 last_turn:text-white md:col-span-1 md:col-start-2"
     >
       Turns left: <%= @turns_left %>
     </p>
@@ -148,7 +151,7 @@ defmodule Hangman.LiveWeb.HangmanComponents do
     ~H"""
     <p
       id="message"
-      class="bg-blue-500 py-2 text-center font-semibold text-white md:col-span-1 md:col-start-2"
+      class="rounded bg-blue-500 py-2 text-center font-semibold text-white shadow md:col-span-1 md:col-start-2"
     >
       <%= message(@game_state, @guess) |> HTML.raw() %>
     </p>

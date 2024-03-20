@@ -11,11 +11,6 @@ module.exports = {
     '../lib/hangman_live_web.ex',
     '../lib/hangman_live_web/**/*.*ex'
   ],
-  safelist: [
-    {
-      pattern: /(border|text)-(green|blue|indigo|purple|pink)-(6|7|8)00/
-    }
-  ],
   theme: {
     extend: {
       colors: {
@@ -36,14 +31,6 @@ module.exports = {
       gridTemplateColumns: {
         'auto-fit': 'repeat(auto-fit, minmax(3rem, 1fr))'
       }
-    }
-  },
-  variants: {
-    extend: {
-      //backgroundColor: ['responsive', 'hover', 'focus', 'active']
-      backgroundColor: ['active', 'disabled'],
-      opacity: ['disabled'],
-      cursor: ['disabled']
     }
   },
   plugins: [
@@ -74,9 +61,9 @@ module.exports = {
         '.phx-change-loading &'
       ])
     ),
-    plugin(({ addVariant }) => addVariant('hide', '&[hide]')),
-    plugin(({ addVariant }) => addVariant('show', '&[show]')),
-    plugin(({ addVariant }) => addVariant('unveil', '&[unveil]')),
+    plugin(({ addVariant }) => addVariant('concealed', '&[concealed]')),
+    plugin(({ addVariant }) => addVariant('revealed', '&[revealed]')),
+    plugin(({ addVariant }) => addVariant('unveiled', '&[unveiled]')),
     plugin(({ addVariant }) => addVariant('good-guess', '&[good-guess]')),
     plugin(({ addVariant }) => addVariant('bad-guess', '&[bad-guess]')),
     plugin(({ addVariant }) => addVariant('last_turn', '&[last_turn]')),

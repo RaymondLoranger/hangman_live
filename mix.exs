@@ -8,8 +8,31 @@ defmodule Hangman.Live.MixProject do
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
+      name: "Hangman Live",
+      source_url: source_url(),
+      description: description(),
+      package: package(),
       aliases: aliases(),
       deps: deps()
+    ]
+  end
+
+  defp source_url do
+    "https://github.com/RaymondLoranger/hangman_live"
+  end
+
+  defp description do
+    """
+    Hangman Game built with LiveView.
+    """
+  end
+
+  defp package do
+    [
+      files: ["lib", "mix.exs", "README*"],
+      maintainers: ["Raymond Loranger"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => source_url()}
     ]
   end
 

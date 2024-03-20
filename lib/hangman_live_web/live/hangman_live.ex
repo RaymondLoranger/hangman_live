@@ -29,7 +29,10 @@ defmodule Hangman.LiveWeb.HangmanLive do
               letter={letter}
             />
           </.word_letters>
-          <.guess_letters update="stream">
+          <.guess_letters
+            update="stream"
+            disabled={@game_state in [:lost, :win]}
+          >
             <.guess_letter
               :for={{id, letter} <- @streams.guess_letters}
               id={id}
@@ -79,14 +82,4 @@ defmodule Hangman.LiveWeb.HangmanLive do
   @spec make_move(Socket.t(), <<_::8>>) :: Socket.t()
   defp make_move(socket, guess),
     do: Live.make_move(socket, guess) |> stream_insert(:guess_letters, guess)
-
-  #   defp update_stream(%Socket{assigns: %{game_state: game_state}} = socket) when game_state in [:lost, :won] do
-  #  Enum.reduce(@letters, socket, fn letter, socket ->
-  # stream_insert(socket, stream_insert(:guess_letters, letter))
-  # end)
-  #   end
-
-  #   defp make_move(socket) do
-
-  #   end
 end
